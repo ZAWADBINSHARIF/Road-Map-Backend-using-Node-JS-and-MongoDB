@@ -1,4 +1,4 @@
-// external import 
+// external import
 import jwt from 'jsonwebtoken';
 import { config } from 'dotenv';
 
@@ -8,19 +8,7 @@ config();
 
 const JWT_SECURE_TOKEN = process.env.JWT_SECURE_TOKEN;
 
-
-export async function createJWT(userInfo) {
-
-    try {
-        const token = await jwt.sign(userInfo, JWT_SECURE_TOKEN);
-        return token;
-    } catch (error) {
-        console.log(error);
-        return null;
-    }
-}
-
-export async function verifyJWT(req, res, next) {
+export default async function JWT_verifier(req, res, next) {
     let cookie = req.headers.authorization;
 
     cookie = cookie.split(" ")[1];

@@ -1,11 +1,10 @@
 import express from "express";
-import { authUser } from "../controllers/authController.js";
-import { verifyJWT } from "../utilities/jwtHandler.js";
-
+import { authUser } from '../controllers/authController.js';
+import JWT_verifier from "../middlewares/JWT_verifier.js";
 
 const router = express.Router();
 
-router.get('/verify', verifyJWT)
+router.get('/verify', JWT_verifier);
 router.post('/login', authUser);
 
 

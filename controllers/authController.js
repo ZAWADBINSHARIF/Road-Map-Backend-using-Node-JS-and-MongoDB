@@ -4,7 +4,7 @@ import asyncHandler from 'express-async-handler';
 
 // internal import
 import User from '../models/User.js';
-import { createJWT } from '../utilities/jwtHandler.js';
+import createJWT from '../utilities/createJWT.js';
 
 
 
