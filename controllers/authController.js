@@ -36,14 +36,16 @@ export const authUser = asyncHandler(async (req, res) => {
 export const otpSender = asyncHandler(async (req, res) => {
     const { email, name } = req.body;
     const foundUser = await User.findOne({ email }).exec();
-    console.log(req.body);
+
     try {
 
         if (!email && !name) {
+            console.log('Email and Name are required');
             return res.status(400).json({ "error": 'Email and Name are required' });
         }
 
         if (foundUser) {
+            console.log('Email already was used');
             return res.status(400).json({ "error": 'Email already was used' });
         }
 
@@ -76,6 +78,8 @@ export const otpVerifier = asyncHandler(async (req, res) => {
         if (!found) {
             return res.status(403).json({ "error": 'Expired OTP' });
         }
+
+
 
         const newUser = new User({
             email, name, number, password
