@@ -4,7 +4,7 @@ import { config } from 'dotenv';
 
 config();
 
-async function sendOTP(RECEIVER_EMAIL, name, OTP) {
+export default async function sendOTP(RECEIVER_EMAIL, name, OTP) {
 
     const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS;
     const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
@@ -38,5 +38,3 @@ async function sendOTP(RECEIVER_EMAIL, name, OTP) {
     }
 
 }
-
-await sendOTP('syedzawadbinsharif@gmail.com', "Zawad", 112233);
