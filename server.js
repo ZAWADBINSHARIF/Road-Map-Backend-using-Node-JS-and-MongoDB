@@ -8,6 +8,7 @@ import cookieParser from 'cookie-parser';
 // internal import
 import dbConnection from './config/dbConnection.js';
 import authRoutes from './routes/authRoutes.js';
+import branchRoutes from './routes/branchRoutes.js';
 
 
 // for getting the values of .env file
@@ -38,6 +39,7 @@ app.get('/', (req, res) => {
 });
 
 app.use("/api", authRoutes);
+app.use("/api/branch", branchRoutes);
 
 mongoose.connection.once('open', () => {
     console.log("Database is connected");
