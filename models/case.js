@@ -23,7 +23,7 @@ const caseSchema = mongoose.Schema({
     finishTime: String,
     dropdowns_users: [String],
     caseLocation: {
-        type: String,
+        type: mongoose.Types.ObjectId,
         required: true,
     },
     pageNo: {

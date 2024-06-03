@@ -13,7 +13,7 @@ const branchSchema = mongoose.Schema({
     }],
     caseContainers: [{
         type: mongoose.Types.ObjectId,
-        ref: 'caseContainer'
+        ref: 'case_container'
     }]
 });
 
