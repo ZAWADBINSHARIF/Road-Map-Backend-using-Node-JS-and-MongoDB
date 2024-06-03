@@ -79,7 +79,6 @@ export const getBranch = expressAsyncHandler(async (req, res) => {
         const data = await Branch.find({ _id: location_id }).select("branches _id caseContainers").lean().populate("branches caseContainers");
         const branches = data.map(item => item.branches);
         const caseContainers = data.map(item => item.caseContainers);
-        console.log(caseContainers);
 
         return res.status(200).json({ branches: branches[0], caseContainers: caseContainers[0] });
     }
