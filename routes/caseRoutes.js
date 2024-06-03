@@ -1,9 +1,9 @@
 // external import
 import express from 'express';
-import multer from 'multer';
 
 // internal import
-import fileUploader from '../middlewares/fileUploader.js';
+import caseFileUploader from '../middlewares/caseFileUploader.js';
+import { addCase } from '../controllers/caseController.js';
 
 
 
@@ -12,11 +12,7 @@ const router = express.Router();
 router.get("/video", (req, res) => {
     res.send("<h1>Video upload section</h1>");
 });
-router.post("/video", fileUploader, (req, res) => {
-    console.log(req.body);
-
-    res.json({ message: 'File uploaded successfully' });
-});
+router.post("/video", caseFileUploader, addCase);
 
 
 export default router;

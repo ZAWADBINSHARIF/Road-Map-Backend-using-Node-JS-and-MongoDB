@@ -11,9 +11,9 @@ const branchSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: 'branch'
     }],
-    cases: [{
+    caseContainers: [{
         type: mongoose.Types.ObjectId,
-        ref: 'case'
+        ref: 'caseContainer'
     }]
 });
 

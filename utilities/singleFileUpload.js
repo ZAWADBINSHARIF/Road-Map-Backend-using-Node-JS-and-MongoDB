@@ -11,8 +11,7 @@ export default function singleFileUpload(
 ) {
 
     const __dirname = import.meta.dirname;
-    const uploadFolder = `${__dirname}/../public/upload/${uploadDestinationFolder}`;
-    console.log(__dirname);
+    const uploadFolder = path.join(`${__dirname}`, "..", "public", "upload", `${uploadDestinationFolder}`);
 
     const storage = multer.diskStorage({
         destination: function (req, file, cb) {
@@ -27,6 +26,9 @@ export default function singleFileUpload(
                 .split(" ")
                 .join("-") + "-" +
                 Date.now();
+
+            req.body.fileName = fileName + fileExt;
+            console.log(fileName + fileExt);
 
             cb(null, fileName + fileExt);
         }

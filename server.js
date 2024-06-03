@@ -3,6 +3,7 @@ import express from 'express';
 import { config } from 'dotenv';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
+import cors from 'cors';
 
 
 // internal import
@@ -22,7 +23,7 @@ const PORT = process.env.PORT;
 dbConnection();
 
 // allow cors cross orgin
-// app.use(cors(corsOptions));
+app.use(cors());
 
 // for getting cookies
 app.use(cookieParser());

@@ -1,6 +1,6 @@
 import singleFileUpload from "../utilities/singleFileUpload.js";
 
-export default function fileUploader(req, res, next) {
+export default function caseFileUploader(req, res, next) {
 
     const upload = singleFileUpload({
         'uploadDestinationFolder': "cases",
@@ -9,7 +9,7 @@ export default function fileUploader(req, res, next) {
     });
 
 
-    upload.any()(req, res, err => {
+    upload.single('case_file')(req, res, err => {
         if (err) {
             res.status(500).json({
                 error: err.message
