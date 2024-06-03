@@ -9,10 +9,9 @@ const caseContainerSchema = mongoose.Schema({
     },
     cases: [{
         type: mongoose.Types.ObjectId,
-        required: true,
         ref: "case"
     }],
-    caseLocation: {
+    caseContainerLocation: {
         type: mongoose.Types.ObjectId,
         required: true,
         ref: "branch"
@@ -20,5 +19,5 @@ const caseContainerSchema = mongoose.Schema({
     problemList: [String],
 });
 
-const caseContainer = mongoose.model('caseContainer', caseContainerSchema);
-export default caseContainerModel;
+const CaseContainer = mongoose.model('case_container', caseContainerSchema);
+export default CaseContainer;

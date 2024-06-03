@@ -11,6 +11,7 @@ import dbConnection from './config/dbConnection.js';
 import authRoutes from './routes/authRoutes.js';
 import branchRoutes from './routes/branchRoutes.js';
 import caseRouters from './routes/caseRoutes.js';
+import caseContainerRoutes from './routes/caseContainerRoutes.js';
 
 
 // for getting the values of .env file
@@ -43,6 +44,7 @@ app.get('/', (req, res) => {
 app.use("/api", authRoutes);
 app.use("/api/branch", branchRoutes);
 app.use("/api/case", caseRouters);
+app.use("/api/caseContainer", caseContainerRoutes);
 
 mongoose.connection.once('open', () => {
     console.log("Database is connected");

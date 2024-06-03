@@ -10,7 +10,7 @@ const caseSchema = mongoose.Schema({
     date: String,
     note: String,
     impression: [String],
-    videoFile: String,
+    fileName: String,
     frequency: {
         number: Number,
         time: {
