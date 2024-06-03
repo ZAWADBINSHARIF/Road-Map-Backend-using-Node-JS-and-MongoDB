@@ -7,7 +7,7 @@ import otpGenerator from 'otp-generator';
 import User from '../models/User.js';
 import createJWT from '../utilities/createJWT.js';
 import sendOTP from '../utilities/sendOTP.js';
-import UserOTP from '../models/userOTP.js';
+import UserOTP from '../models/UserOTP.js';
 
 
 
