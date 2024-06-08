@@ -10,7 +10,7 @@ const caseSchema = mongoose.Schema({
     date: String,
     note: String,
     impression: [String],
-    fileName: String,
+    case_files_name: [String],
     frequency: {
         number: Number,
         time: {
@@ -30,6 +30,8 @@ const caseSchema = mongoose.Schema({
         type: Number,
         required: true
     },
+}, {
+    timestamps: true
 });
 
 

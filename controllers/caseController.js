@@ -11,15 +11,19 @@ export async function addCase(req, res) {
         date,
         note,
         impression,
-        fileName,
         frequency,
         severity,
         startTime,
         finishTime,
         dropdowns_users,
         pageNo,
-        caseContainerId
+        caseContainerId,
+        case_files_name
     } = req.body;
+
+    console.log(case_files_name);
+
+    // return;
 
     try {
 
@@ -29,7 +33,7 @@ export async function addCase(req, res) {
             date,
             note,
             impression,
-            fileName,
+            case_files_name,
             frequency,
             severity,
             startTime,

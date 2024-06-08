@@ -9,7 +9,7 @@ export default function caseFileUploader(req, res, next) {
     });
 
 
-    upload.single('case_file')(req, res, err => {
+    upload.any()(req, res, err => {
         if (err) {
             res.status(500).json({
                 error: err.message

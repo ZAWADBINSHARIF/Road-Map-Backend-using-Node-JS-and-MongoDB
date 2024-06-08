@@ -27,7 +27,13 @@ export default function singleFileUpload(
                 .join("-") + "-" +
                 Date.now();
 
-            req.body.fileName = fileName + fileExt;
+            if (req.body.case_files_name) {
+                req.body.case_files_name.push(fileName + fileExt);
+            } else {
+                req.body.case_files_name = [];
+                req.body.case_files_name.push(fileName + fileExt);
+            }
+
             console.log(fileName + fileExt);
 
             cb(null, fileName + fileExt);
