@@ -37,10 +37,6 @@ app.use(express.urlencoded({ extended: true }));
 
 
 // all routers path
-app.get('/', (req, res) => {
-    res.send("<h1>Server is running 🚀</h1>");
-});
-
 app.use("/api", authRoutes);
 app.use("/api/branch", branchRoutes);
 app.use("/api/case", caseRouters);
