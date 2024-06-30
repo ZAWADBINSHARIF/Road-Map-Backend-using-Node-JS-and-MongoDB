@@ -2,15 +2,21 @@
 import mongoose from "mongoose";
 
 const caseSchema = mongoose.Schema({
-    information: String,
+    information: {
+        type: String,
+        trim: true
+    },
     question: {
         type: String,
         required: true,
     },
     date: String,
-    note: String,
+    note: {
+        type: String,
+        trim: true
+    },
     impression: [String],
-    case_files_name: [String],
+    mediaFiles: [],
     frequency: {
         number: Number,
         time: {
@@ -18,7 +24,10 @@ const caseSchema = mongoose.Schema({
             enum: ['Hour', 'Day', 'Week', 'Month', 'Year'],
         },
     },
-    severity: String,
+    severity: {
+        type: String,
+        trim: true
+    },
     startTime: String,
     finishTime: String,
     dropdowns_users: [String],

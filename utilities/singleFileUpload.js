@@ -6,7 +6,8 @@ export default function singleFileUpload(
     {
         uploadDestinationFolder,
         acceptType,
-        errorMessage
+        fileUri,
+        errorMessage,
     }
 ) {
 
@@ -26,17 +27,21 @@ export default function singleFileUpload(
                 .split(" ")
                 .join("-") + "-" +
                 Date.now();
+            const fullFileName = fileName + fileExt;
+            const fileInfoObj = {
+                uri: `${fileUri}/${fullFileName}`,
+                type: file.mimetype,
+                name: fileName
+            };
 
-            if (req.body.case_files_name) {
-                req.body.case_files_name.push(fileName + fileExt);
+            if (req.body.mediaFiles) {
+                req.body.mediaFiles.push(fileInfoObj);
             } else {
-                req.body.case_files_name = [];
-                req.body.case_files_name.push(fileName + fileExt);
+                req.body.mediaFiles = [];
+                req.body.mediaFiles.push(fileInfoObj);
             }
 
-            console.log(fileName + fileExt);
-
-            cb(null, fileName + fileExt);
+            cb(null, fullFileName);
         }
     });
 

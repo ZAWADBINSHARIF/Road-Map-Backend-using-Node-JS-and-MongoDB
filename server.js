@@ -4,6 +4,7 @@ import { config } from 'dotenv';
 import mongoose from 'mongoose';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import path from 'path';
 
 
 // internal import
@@ -18,13 +19,16 @@ import caseContainerRoutes from './routes/caseContainerRoutes.js';
 config();
 
 const app = express();
+const __dirname = import.meta.dirname;
 const PORT = process.env.PORT;
 
 // database connection
 dbConnection();
 
 // allow cors cross orgin
-app.use(cors());
+app.use(cors({
+    'origin': '*'
+}));
 
 // for getting cookies
 app.use(cookieParser());
@@ -35,6 +39,8 @@ app.use(express.json());
 // for getting form data values
 app.use(express.urlencoded({ extended: true }));
 
+
+app.use('/api', express.static(path.join(__dirname, 'public', 'upload')));
 
 // all routers path
 app.use("/api", authRoutes);

@@ -8,12 +8,12 @@ import CaseContainer from '../models/caseContainer.js';
 // @access public
 export async function getCases(req, res) {
     const caseContainerId = req.params?.caseContainerId;
-    console.log(caseContainerId);
+
     try {
         const foundCaseContainer = await CaseContainer.findOne({ _id: caseContainerId }).populate('cases').exec();
 
         if (!foundCaseContainer) {
-            res.status(404).json({ error: "Cases not found" });
+            return res.status(404).json({ error: "Cases not found" });
         }
 
         res.status(200).json(foundCaseContainer);
@@ -22,7 +22,6 @@ export async function getCases(req, res) {
         console.log(error);
         res.status(500).json({ error: error.message });
     }
-
 
 }
 
@@ -43,12 +42,13 @@ export async function addCase(req, res) {
         dropdowns_users,
         pageNo,
         caseContainerId,
-        case_files_name
+        mediaFiles,
     } = req.body;
 
     if (!impression) impression = [];
     if (!dropdowns_users) dropdowns_users = [];
-    console.log(impression);
+    console.log("Media File");
+    console.log(mediaFiles);
     try {
 
         const newCase = await new Case({
@@ -57,7 +57,7 @@ export async function addCase(req, res) {
             date,
             note,
             impression,
-            case_files_name,
+            mediaFiles,
             frequency,
             severity,
             startTime,

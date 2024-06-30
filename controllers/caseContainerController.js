@@ -5,7 +5,7 @@ import CaseContainer from "../models/caseContainer.js";
 
 
 export async function createCaseContainer(req, res) {
-    const { caseContainerName, caseContainerLocation, problemList } = req.body;
+    const { caseContainerName, caseContainerLocation, problemList, createNextPage } = req.body;
 
     try {
 
@@ -16,7 +16,8 @@ export async function createCaseContainer(req, res) {
         const newCaseContainer = await new CaseContainer({
             caseContainerName,
             caseContainerLocation,
-            problemList
+            problemList,
+            createNextPage
         });
 
         await newCaseContainer.save();
