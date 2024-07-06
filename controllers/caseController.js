@@ -47,6 +47,7 @@ export async function addCase(req, res) {
 
     if (!impression) impression = [];
     if (!dropdowns_users) dropdowns_users = [];
+    if (!mediaFiles) mediaFiles = [];
     console.log("Media File");
     console.log(mediaFiles);
     try {
