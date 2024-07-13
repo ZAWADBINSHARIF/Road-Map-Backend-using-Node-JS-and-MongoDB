@@ -80,29 +80,6 @@ export const updateCase = expressAsyncHandler(async (req, res) => {
 });
 
 
-// @desc fetch cases from case container
-// route GET /api/case/caseContainerId
-// @access public
-export async function getCases(req, res) {
-    const caseContainerId = req.params?.caseContainerId;
-
-    try {
-        const foundCaseContainer = await CaseContainer.findOne({ _id: caseContainerId }).populate('cases').exec();
-
-        if (!foundCaseContainer) {
-            return res.status(404).json({ error: "Cases not found" });
-        }
-
-        res.status(200).json(foundCaseContainer);
-
-    } catch (error) {
-        console.log(error);
-        res.status(500).json({ error: error.message });
-    }
-
-}
-
-
 
 // @desc adding single case/componet/string
 // route POST /api/case

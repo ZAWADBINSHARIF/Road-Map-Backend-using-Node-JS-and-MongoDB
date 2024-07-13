@@ -12,6 +12,57 @@ import path from "path";
 
 
 
+// @desc fetch cases from case container
+// route GET /api/caseContainer/:caseContainerId
+// @access public
+export async function getCaseContainer(req, res) {
+    const caseContainerId = req.params?.caseContainerId;
+
+    try {
+        const foundCaseContainer = await CaseContainer.findOne({ _id: caseContainerId }).populate('cases').exec();
+
+        if (!foundCaseContainer) {
+            return res.status(404).json({ error: "Cases not found" });
+        }
+
+        res.status(200).json(foundCaseContainer);
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+
+}
+
+
+
+// @desc For Publishing or Unpublishing Case Container
+// route POST /api/caseContainer/publish_unpublish/:caseContainerId
+// @access private
+export const publishOrUnpublishCaseContainer = expressAsyncHandler(async (req, res) => {
+    const caseContainerId = req.params.caseContainerId;
+
+    try {
+        const caseContainer = await CaseContainer.findOne({ _id: caseContainerId });
+
+        if (!caseContainer) {
+            res.status(404).json({ message: "Case container not found" });
+            return;
+        }
+
+        caseContainer.publish = !caseContainer.publish;
+        await caseContainer.save();
+
+        res.status(200).json({ "msg": "Case Container has been published: " + caseContainer.publish });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ 'error': error.message });
+    }
+
+});
+
+
 // @desc For updating Case Container
 // route POST /api/caseContainer/:caseContainerId
 // @access private

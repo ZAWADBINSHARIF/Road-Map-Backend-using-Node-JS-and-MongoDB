@@ -4,6 +4,7 @@ import JWT_verifier from "../middlewares/JWT_verifier.js";
 
 const router = express.Router();
 
+// ** Both
 router.get('/verify', JWT_verifier);
 router.post('/login', authUser);
 router.post('/otp', otpSender);
