@@ -7,6 +7,39 @@ import Branch from "../models/branch.js";
 import RootBranch from "../models/rootBranch.js";
 
 
+// @desc get branches
+// route POST /api/get_branch_for_user?location_id=/
+// @access Protected
+export const getBranchForUser = expressAsyncHandler(async (req, res) => {
+    const { location_id } = req.query;
+
+
+    if (!location_id)
+        res.status(400).json({ error: "Location ID is not valid" });
+
+
+    if (location_id === '/') {
+        const data = await RootBranch.find().select("branch_ref -_id").lean().populate("branch_ref");
+        let allRootBranches = data.map(item => item.branch_ref);
+
+        console.log(allRootBranches);
+
+        return res.status(200).json({ branches: allRootBranches });
+    } else {
+        const data = await Branch.find({ _id: location_id }).select("branches _id caseContainers").lean().populate("branches caseContainers");
+        const branches = data.map(item => item.branches);
+        const caseContainers = data.map(item => {
+            if (item.caseContainers) {
+                return item.caseContainers.filter(item => item.publish === true);
+
+            }
+        });
+
+        return res.status(200).json({ branches: branches[0], caseContainers: caseContainers[0] });
+    }
+});
+
+
 
 
 // @desc create new branch
@@ -59,7 +92,7 @@ export const createNewBranch = expressAsyncHandler(async (req, res) => {
 
 
 // @desc get branch
-// route POST /api/branch/get_branch?location_id=/
+// route GET /api/branch/get_branch?location_id=/
 // @access Private
 export const getBranch = expressAsyncHandler(async (req, res) => {
 
