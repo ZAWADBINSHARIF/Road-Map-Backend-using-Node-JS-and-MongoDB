@@ -2,6 +2,10 @@
 import mongoose from "mongoose";
 
 const caseSchema = mongoose.Schema({
+    id: {
+        type: String,
+        required: true
+    },
     information: {
         type: String,
         trim: true
@@ -43,6 +47,13 @@ const caseSchema = mongoose.Schema({
     timestamps: true
 });
 
+
+caseSchema.pre('deleteMany', async function (next) {
+    console.log("remove");
+
+    console.log(this);
+
+});
 
 
 const Case = mongoose.model('case', caseSchema);

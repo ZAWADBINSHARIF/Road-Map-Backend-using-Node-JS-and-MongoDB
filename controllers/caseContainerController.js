@@ -1,11 +1,36 @@
 // external import
 import expressAsyncHandler from "express-async-handler";
+import fs from "fs";
 
 
 // internal import
 import Branch from "../models/branch.js";
 import CaseContainer from "../models/caseContainer.js";
 import Case from "../models/case.js";
+import path from "path";
+
+
+
+
+// @desc For updating Case Container
+// route POST /api/caseContainer/:caseContainerId
+// @access private
+export const updateCaseContainer = expressAsyncHandler(async (req, res) => {
+    const caseContainerId = req.params.caseContainerId;
+    const { caseContainerName, caseContainerLocation, problemList, createNextPage } = req.body;
+
+    if (caseContainerName && caseContainerLocation) {
+        Error("caseContainerName and caseContainerLocation not founded");
+    }
+
+    await CaseContainer.findOneAndUpdate({ _id: caseContainerId }, {
+        caseContainerName, caseContainerLocation, problemList, createNextPage
+    });
+
+
+    res.status(200).json({ "msg": "Case Container has been updated" });
+
+});
 
 
 // @desc For creating Case Container
@@ -49,7 +74,7 @@ export async function createCaseContainer(req, res) {
 
 
 // @desc For removing Case Container
-// route POST /api/caseContainer/:caseContainerId
+// route DELETE /api/caseContainer/:caseContainerId
 // @access private
 export const removeCaseContainer = expressAsyncHandler(async (req, res) => {
 
@@ -57,17 +82,47 @@ export const removeCaseContainer = expressAsyncHandler(async (req, res) => {
 
     try {
 
-        const removedCaseContainer = await CaseContainer.findOneAndDelete({ _id: caseContainerId }); // 6688fd70bf5fd2a44d5ad32a
+        const removedCaseContainer = await CaseContainer.findOneAndDelete({ _id: caseContainerId });
 
         if (!removedCaseContainer) {
             res.status(404).json({ 'error': "Case Container not found" });
             return;
         }
+        console.log(removedCaseContainer.caseContainerLocation);
 
         // Now delete all cases associated with the removed caseContainer
-        await Case.deleteMany({ _id: { $in: removedCaseContainer.cases } });
-        res.status(200).json({ 'msg': 'Case Container has been deleted' });
 
+        for (let index in removedCaseContainer.cases) {
+            console.log(index);
+            const removedCase = await Case.findOneAndDelete({ _id: removedCaseContainer.cases[index] });
+
+            if (removedCase?.mediaFiles) {
+
+                for (let i in removedCase?.mediaFiles) {
+                    const filepath = removedCase?.mediaFiles[i]?.uri;
+                    const __dirname = import.meta.dirname;
+
+                    try {
+                        await fs.unlinkSync(path.join(__dirname, "..", "public", "upload", filepath));
+                    } catch (error) {
+                        console.log(error);
+                    }
+
+                }
+
+            }
+        }
+        // const removedCases = await Case.deleteMany({ _id: { $in: removedCaseContainer.cases } });
+
+
+        // Now case container id has been removed from the Branch
+        await Branch.findOneAndUpdate({ _id: removedCaseContainer.caseContainerLocation }, {
+            $pull: {
+                caseContainers: caseContainerId
+            }
+        });
+
+        res.status(200).json({ 'msg': 'Case Container has been deleted' });
 
     } catch (error) {
         console.log(error);
