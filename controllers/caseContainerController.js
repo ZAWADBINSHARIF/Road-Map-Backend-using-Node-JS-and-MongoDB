@@ -144,7 +144,7 @@ export const removeCaseContainer = expressAsyncHandler(async (req, res) => {
         // Now delete all cases associated with the removed caseContainer
 
         for (let index in removedCaseContainer.cases) {
-            console.log(index);
+
             const removedCase = await Case.findOneAndDelete({ _id: removedCaseContainer.cases[index] });
 
             if (removedCase?.mediaFiles) {

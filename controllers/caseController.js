@@ -1,7 +1,61 @@
+// external import
+import fs from 'fs';
+import path from 'path';
+
+
 // internal import
 import expressAsyncHandler from 'express-async-handler';
 import Case from '../models/case.js';
 import CaseContainer from '../models/caseContainer.js';
+
+
+
+// @desc For removing Case
+// route DELETE /api/case/:caseId
+// @access private
+export const removeCase = expressAsyncHandler(async (req, res) => {
+
+    const { caseId } = req.params;
+
+    try {
+
+        const removedCase = await Case.findOneAndDelete({ _id: caseId });
+        const case_container_id = removedCase.caseLocation;
+
+        if (removedCase?.mediaFiles) {
+
+            for (let i in removedCase?.mediaFiles) {
+                const filepath = removedCase?.mediaFiles[i]?.uri;
+                const __dirname = import.meta.dirname;
+
+                try {
+                    await fs.unlinkSync(path.join(__dirname, "..", "public", "upload", filepath));
+                } catch (error) {
+                    console.log(error);
+                }
+            }
+        }
+
+        if (case_container_id) {
+
+            // removed_Case_Id_Ref_From_Case_Container
+            await CaseContainer.findOneAndUpdate({ _id: case_container_id }, {
+                $pull: {
+                    cases: removedCase._id
+                }
+            });
+
+        }
+
+        res.status(200).json({ msg: "Case componet has been deleted" });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ error: error.message });
+    }
+
+
+});
 
 
 
