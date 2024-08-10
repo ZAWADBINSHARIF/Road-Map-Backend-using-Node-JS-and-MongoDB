@@ -18,12 +18,12 @@ export const authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email }).exec();
-
+    console.log(email);
     if (user && await user.matchPassword(password)) {
         const jwtToken = await createJWT({ ...user["_doc"], password: null });
         return res.status(200).json({ token: jwtToken, userInfo: { ...user["_doc"], password: null } });
     } else {
-        return res.status(400).json({ error: "User not authenticate" });
+        return res.status(401).json({ error: "User not authenticate" });
     }
 
 });
@@ -46,7 +46,7 @@ export const otpSender = asyncHandler(async (req, res) => {
 
         if (foundUser) {
             console.log('Email already was used');
-            return res.status(400).json({ "error": 'Email already was used' });
+            return res.status(409).json({ "error": 'Email already was used' });
         }
 
         const OTP = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
