@@ -12,59 +12,6 @@ import UserOTP from '../models/UserOTP.js';
 
 
 
-
-// @desc Mail Authentication
-// route GET /api/auth-mail
-// @access Public
-export const authMail = asyncHandler(async (req, res) => {
-
-    const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS;
-    const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
-
-    async function myCustomMethod(ctx) {
-        let cmd = await ctx.sendCommand(
-            'AUTH PLAIN ' +
-            Buffer.from(
-                '\u0000' + ctx.auth.credentials.user + '\u0000' + ctx.auth.credentials.pass,
-                'utf-8'
-            ).toString('base64')
-        );
-
-        if (cmd.status < 200 || cmd.status >= 300) {
-            throw new Error('Failed to authenticate user: ' + cmd.text);
-        }
-    }
-
-    const transporter = nodemailer.createTransport({
-        service: 'gmail',
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false, // Use `true` for port 465, `false` for all other ports
-        auth: {
-            user: EMAIL_ADDRESS,
-            pass: EMAIL_PASSWORD
-        },
-        customAuth: {
-            'MY-CUSTOM-METHOD': myCustomMethod
-        }
-    });
-
-
-    try {
-        await transporter.verify();
-        res.set('Auth-Status', 'Ok')
-            .set('Auth-Server', 'localhost')
-            .set('Auth-Port', 143)
-            .status(200)
-            .json({ msg: "success" });
-    } catch (error) {
-        res.status(200).json({ error });
-    }
-
-});
-
-
-
 // @desc Auth Login
 // route POST /api/login
 // @access Public
