@@ -4,6 +4,21 @@ import { config } from 'dotenv';
 
 config();
 
+
+async function myCustomMethod(ctx) {
+    let cmd = await ctx.sendCommand(
+        'AUTH PLAIN ' +
+        Buffer.from(
+            '\u0000' + ctx.auth.credentials.user + '\u0000' + ctx.auth.credentials.pass,
+            'utf-8'
+        ).toString('base64')
+    );
+
+    if (cmd.status < 200 || cmd.status >= 300) {
+        throw new Error('Failed to authenticate user: ' + cmd.text);
+    }
+}
+
 export default async function sendOTP(RECEIVER_EMAIL, name, OTP) {
 
     const EMAIL_ADDRESS = process.env.EMAIL_ADDRESS;
@@ -12,13 +27,16 @@ export default async function sendOTP(RECEIVER_EMAIL, name, OTP) {
 
     const transporter = nodemailer.createTransport({
         service: 'gmail',
-        host: "smtp.gmail.email",
+        host: "smtp.gmail.com",
         port: 587,
         secure: false, // Use `true` for port 465, `false` for all other ports
         auth: {
             user: EMAIL_ADDRESS,
             pass: EMAIL_PASSWORD
         },
+        customAuth: {
+            'MY-CUSTOM-METHOD': myCustomMethod
+        }
     });
 
     try {
