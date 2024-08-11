@@ -1,7 +1,6 @@
 // external import
 import asyncHandler from 'express-async-handler';
 import otpGenerator from 'otp-generator';
-import * as nodemailer from "nodemailer";
 
 
 // internal import
@@ -9,6 +8,7 @@ import User from '../models/User.js';
 import createJWT from '../utilities/createJWT.js';
 import sendOTP from '../utilities/sendOTP.js';
 import UserOTP from '../models/UserOTP.js';
+import axios from 'axios';
 
 
 
@@ -37,10 +37,12 @@ export const authUser = asyncHandler(async (req, res) => {
 export const otpSender = asyncHandler(async (req, res) => {
     const { email, name } = req.body;
     const foundUser = await User.findOne({ email }).exec();
+    const OTP_SENDER_URL = process.env.OTP_SENDER_URL;
+    const OTP_SENDER_PASSWORD = process.env.OTP_SENDER_PASSWORD;
 
     try {
 
-        if (!email && !name) {
+        if (!email || !name) {
             console.log('Email and Name are required');
             return res.status(400).json({ "error": 'Email and Name are required' });
         }
@@ -52,14 +54,29 @@ export const otpSender = asyncHandler(async (req, res) => {
 
         const OTP = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
 
-        await sendOTP(email, name, OTP);
+        // ** ####################################################################
+
+        // ? This sendOTP function is used for sending OTP vai email. But this method does not work in VPS server.
+        // ? I tried to work this method using Nginx and Apache2 and I failded. That's why I used external OTP Sender URL method which was hosted on onrender for free server.
+
+        // ?? await sendOTP(email, name, OTP);
+
+        await axios.post(OTP_SENDER_URL, {
+            email,
+            name,
+            otp: OTP,
+            password: OTP_SENDER_PASSWORD
+        });
+
+        // ** ####################################################################
+
         await UserOTP.findOneAndUpdate(
             { email },
             { otp: OTP },
             { upsert: true, new: true, setDefaultsOnInsert: true }
         );
     } catch (error) {
-        return res.status(400).json({ "error": error.msg });
+        return res.status(400).json({ "error": error.message });
     }
 
     res.status(200).json({ msg: "OTP has been sent successfully" });
@@ -67,7 +84,7 @@ export const otpSender = asyncHandler(async (req, res) => {
 
 
 
-// @desc OTP verifier
+// @desc OTP verifyng and adding an user
 // route POST /api/otp/verifier
 // @access Public
 export const otpVerifier = asyncHandler(async (req, res) => {
@@ -80,8 +97,6 @@ export const otpVerifier = asyncHandler(async (req, res) => {
             return res.status(403).json({ "error": 'Expired OTP' });
         }
 
-
-
         const newUser = new User({
             email, name, number, password
         });
@@ -90,7 +105,7 @@ export const otpVerifier = asyncHandler(async (req, res) => {
         await UserOTP.findOneAndDelete({ email, otp });
 
     } catch (error) {
-        return res.status(400).json({ "error": error.msg });
+        return res.status(400).json({ "error": error.message });
     }
 
     res.status(201).json({ msg: "New user has been created" });
