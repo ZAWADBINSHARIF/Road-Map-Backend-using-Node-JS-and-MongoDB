@@ -41,15 +41,14 @@ export const getBranchForUser = expressAsyncHandler(async (req, res) => {
     if (location_id === '/') {
         const data = await RootBranch.find().select("branch_ref -_id").lean().populate("branch_ref");
         let allRootBranches = data.map(item => item.branch_ref);
+        let branches = allRootBranches.filter(item => item.publish && item?.publish === true);
 
-        console.log(allRootBranches);
-
-        return res.status(200).json({ branches: allRootBranches });
+        return res.status(200).json({ branches: branches });
     } else {
         const data = await Branch.find({ _id: location_id }).select("branches _id caseContainers").lean().populate("branches caseContainers");
         const branches = data.map(item => {
             if (item.branches) {
-                return item.branches.filter(item => item.publish === true);
+                return item.branches.filter(item => item.publish && item?.publish === true);
             }
         });
         const caseContainers = data.map(item => {
@@ -58,7 +57,7 @@ export const getBranchForUser = expressAsyncHandler(async (req, res) => {
 
             }
         });
-
+        // console.log(branches);
         return res.status(200).json({ branches: branches[0], caseContainers: caseContainers[0] });
     }
 });
