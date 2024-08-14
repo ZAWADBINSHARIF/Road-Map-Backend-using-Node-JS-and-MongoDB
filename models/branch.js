@@ -14,7 +14,12 @@ const branchSchema = mongoose.Schema({
     caseContainers: [{
         type: mongoose.Types.ObjectId,
         ref: 'case_container'
-    }]
+    }],
+    publish: {
+        type: Boolean,
+        required: true,
+        default: false
+    }
 });
 
 

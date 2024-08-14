@@ -2,7 +2,7 @@
 import express from 'express';
 
 // internal import
-import { createNewBranch, getBranch, getBranchForUser } from '../controllers/branchController.js';
+import { createNewBranch, getBranch, getBranchForUser, updateBranch } from '../controllers/branchController.js';
 
 
 const router = express.Router();
@@ -11,6 +11,7 @@ const router = express.Router();
 // ** For Admin
 router.post('/create_new_branch', createNewBranch);
 router.get("/get_branch", getBranch);
+router.post("/update_branch", updateBranch);
 
 
 // ** For user

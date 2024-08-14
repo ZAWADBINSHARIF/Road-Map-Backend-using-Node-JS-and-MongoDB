@@ -7,9 +7,29 @@ import Branch from "../models/branch.js";
 import RootBranch from "../models/rootBranch.js";
 
 
-// @desc get branches
-// route POST /api/get_branch_for_user?location_id=/
-// @access Protected
+// @desc rename branche
+// route POST /api/branch/update_branch?branch_id
+// @access Private
+export const updateBranch = expressAsyncHandler(async (req, res) => {
+    const { branch_id } = req.query;
+    const { newName: name, publish } = req.body;
+
+    if (!branch_id)
+        return res.status(400).json({ error: "Branch ID name is not valid" });
+    try {
+        await Branch.findOneAndUpdate({ _id: branch_id }, { name, publish });
+        res.status(200).json({ msg: "Branch has been changed" });
+    } catch (error) {
+        console.log(error);
+        res.json(500).json({ error: error.message });
+    }
+
+});
+
+
+// @desc get branches for an user
+// route POST /api/branch/get_branch_for_user?location_id=/
+// @access Public
 export const getBranchForUser = expressAsyncHandler(async (req, res) => {
     const { location_id } = req.query;
 
@@ -27,7 +47,11 @@ export const getBranchForUser = expressAsyncHandler(async (req, res) => {
         return res.status(200).json({ branches: allRootBranches });
     } else {
         const data = await Branch.find({ _id: location_id }).select("branches _id caseContainers").lean().populate("branches caseContainers");
-        const branches = data.map(item => item.branches);
+        const branches = data.map(item => {
+            if (item.branches) {
+                return item.branches.filter(item => item.publish === true);
+            }
+        });
         const caseContainers = data.map(item => {
             if (item.caseContainers) {
                 return item.caseContainers.filter(item => item.publish === true);
@@ -38,8 +62,6 @@ export const getBranchForUser = expressAsyncHandler(async (req, res) => {
         return res.status(200).json({ branches: branches[0], caseContainers: caseContainers[0] });
     }
 });
-
-
 
 
 // @desc create new branch
@@ -88,7 +110,6 @@ export const createNewBranch = expressAsyncHandler(async (req, res) => {
     }
 
 });
-
 
 
 // @desc get branch
