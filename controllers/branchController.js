@@ -7,6 +7,45 @@ import Branch from "../models/branch.js";
 import RootBranch from "../models/rootBranch.js";
 
 
+
+// @desc rename branche
+// route POST /api/branch/remove?branch_id
+// @access Private
+export const removeBranch = expressAsyncHandler(async (req, res) => {
+    const { branch_id } = req.query;
+
+    try {
+
+        const branchFounded = await Branch.find({
+            $and: [
+                { _id: branch_id },
+                { branches: { $size: 0 } },
+                { caseContainers: { $size: 0 } },
+            ],
+        });
+
+
+        if (branchFounded.length > 0) {
+            const removingID = branchFounded[0]._id;
+
+            await Branch.findOneAndDelete({ _id: removingID });
+            await RootBranch.findOneAndDelete({ branch_ref: removingID });
+
+        } else {
+            return res.status(406).json({ error: "The Section is not allowed to remove" });
+        }
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ msg: error.message });
+    }
+
+
+    res.status(200).json({ msg: "Section has been deleted" });
+
+});
+
+
 // @desc rename branche
 // route POST /api/branch/update_branch?branch_id
 // @access Private
