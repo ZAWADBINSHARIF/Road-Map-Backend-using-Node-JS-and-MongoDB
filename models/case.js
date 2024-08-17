@@ -30,7 +30,6 @@ const caseSchema = mongoose.Schema({
     },
     severity: {
         type: String,
-        trim: true
     },
     startTime: String,
     finishTime: String,

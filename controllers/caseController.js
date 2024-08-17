@@ -84,6 +84,8 @@ export const updateCase = expressAsyncHandler(async (req, res) => {
         caseContainerId,
         mediaFiles,
     } = req.body;
+
+    if (frequency) frequency = JSON.parse(frequency);
     if (!impression) impression = [];
     if (!dropdowns_users) dropdowns_users = [];
     if (!mediaFiles) mediaFiles = [];
@@ -156,6 +158,7 @@ export async function addCase(req, res) {
         mediaFiles,
     } = req.body;
 
+    if (frequency) frequency = JSON.parse(frequency);
     if (!impression) impression = [];
     if (!dropdowns_users) dropdowns_users = [];
     if (!mediaFiles) mediaFiles = [];
@@ -188,7 +191,7 @@ export async function addCase(req, res) {
                 }
             }
         );
-        console.log("case added");
+        console.log(req.body);
         res.status(201).json({ message: 'New case has been added' });
 
     } catch (error) {
