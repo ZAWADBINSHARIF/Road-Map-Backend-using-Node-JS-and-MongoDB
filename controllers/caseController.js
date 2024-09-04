@@ -74,7 +74,6 @@ export const updateCase = expressAsyncHandler(async (req, res) => {
         question,
         date,
         note,
-        impression,
         frequency,
         severity,
         startTime,
@@ -86,7 +85,6 @@ export const updateCase = expressAsyncHandler(async (req, res) => {
     } = req.body;
 
     if (frequency) frequency = JSON.parse(frequency);
-    if (!impression) impression = [];
     if (!dropdowns_users) dropdowns_users = [];
     if (!mediaFiles) mediaFiles = [];
 
@@ -96,7 +94,6 @@ export const updateCase = expressAsyncHandler(async (req, res) => {
         question,
         date,
         note,
-        impression,
         frequency,
         severity,
         startTime,
@@ -114,7 +111,6 @@ export const updateCase = expressAsyncHandler(async (req, res) => {
             question,
             date,
             note,
-            impression,
             mediaFiles,
             frequency,
             severity,
@@ -147,7 +143,6 @@ export async function addCase(req, res) {
         question,
         date,
         note,
-        impression,
         frequency,
         severity,
         startTime,
@@ -159,7 +154,6 @@ export async function addCase(req, res) {
     } = req.body;
 
     if (frequency) frequency = JSON.parse(frequency);
-    if (!impression) impression = [];
     if (!dropdowns_users) dropdowns_users = [];
     if (!mediaFiles) mediaFiles = [];
 
@@ -171,7 +165,6 @@ export async function addCase(req, res) {
             question,
             date,
             note,
-            impression,
             mediaFiles,
             frequency,
             severity,

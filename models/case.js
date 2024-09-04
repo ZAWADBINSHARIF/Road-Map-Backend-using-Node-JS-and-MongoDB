@@ -19,7 +19,6 @@ const caseSchema = mongoose.Schema({
         type: String,
         trim: true
     },
-    impression: [String],
     mediaFiles: [],
     frequency: {
         number: Number,

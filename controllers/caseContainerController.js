@@ -68,14 +68,14 @@ export const publishOrUnpublishCaseContainer = expressAsyncHandler(async (req, r
 // @access private
 export const updateCaseContainer = expressAsyncHandler(async (req, res) => {
     const caseContainerId = req.params.caseContainerId;
-    const { caseContainerName, caseContainerLocation, problemList, createNextPage } = req.body;
+    const { caseContainerName, caseContainerLocation, problemList, impression, createNextPage } = req.body;
 
     if (caseContainerName && caseContainerLocation) {
         Error("caseContainerName and caseContainerLocation not founded");
     }
 
     await CaseContainer.findOneAndUpdate({ _id: caseContainerId }, {
-        caseContainerName, caseContainerLocation, problemList, createNextPage
+        caseContainerName, caseContainerLocation, problemList, impression, createNextPage
     });
 
 
@@ -88,7 +88,7 @@ export const updateCaseContainer = expressAsyncHandler(async (req, res) => {
 // route POST /api/caseContainer
 // @access private
 export async function createCaseContainer(req, res) {
-    const { caseContainerName, caseContainerLocation, problemList, createNextPage } = req.body;
+    const { caseContainerName, caseContainerLocation, problemList, createNextPage, impression } = req.body;
 
     try {
 
@@ -100,6 +100,7 @@ export async function createCaseContainer(req, res) {
             caseContainerName,
             caseContainerLocation,
             problemList,
+            impression,
             createNextPage
         });
 
