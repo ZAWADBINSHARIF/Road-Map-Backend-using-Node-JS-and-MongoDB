@@ -23,6 +23,11 @@ const caseContainerSchema = mongoose.Schema({
     },
     problemList: [String],
     impression: [String],
+    showImpression: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     publish: {
         type: Boolean,
         required: true,
