@@ -8,17 +8,34 @@ config();
 
 const JWT_SECURE_TOKEN = process.env.JWT_SECURE_TOKEN;
 
-export default async function JWT_verifier(req, res, next) {
-    let cookie = req.headers.authorization;
+export default function JWT_verifier(role = null) {
+    return async (req, res, next) => {
+        let cookie = req.headers.authorization;
 
-    cookie = cookie.split(" ")[1];
 
-    try {
-        const decode = await jwt.verify(cookie, JWT_SECURE_TOKEN);
-        return res.status(200).json({ userInfo: decode });
-    } catch (error) {
-        console.log(error);
-        return res.status(401).json(error);
-    }
+        try {
+            cookie = cookie.split(" ")[1];
+            console.log(cookie);
+            const decode = await jwt.verify(cookie, JWT_SECURE_TOKEN);
 
+            if (role) {
+
+                if (decode.rule.toLowerCase() === role.toLowerCase()) {
+                    next();
+                } else {
+                    return res.status(401).json({ error: "User is unauthorized" });
+                }
+
+            } else {
+                req.useremail = decode.email;
+                next();
+            }
+
+
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({ error: error });
+        }
+
+    };
 }

@@ -19,10 +19,28 @@ export const authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email }).exec();
-    console.log(email);
+    console.log({ ...user });
     if (user && await user.matchPassword(password)) {
-        const jwtToken = await createJWT({ ...user["_doc"], password: null });
-        return res.status(200).json({ token: jwtToken, userInfo: { ...user["_doc"], password: null } });
+
+        const jwtToken = await createJWT({
+            ...user["_doc"], profile_image: null, password: null, createdAt: null, updatedAt: null
+        });
+        console.log("login");
+        return res.status(200)
+            .json({
+                token: jwtToken,
+                userInfo:
+                {
+                    ...user["_doc"],
+                    password: null,
+                    profile_image: null,
+                    password: null,
+                    createdAt: null,
+                    updatedAt: null,
+                    countryCodeAndFlag: null
+                }
+            });
+
     } else {
         return res.status(401).json({ error: "User not authenticate" });
     }
@@ -98,7 +116,7 @@ export const otpVerifier = asyncHandler(async (req, res) => {
         }
 
         const newUser = new User({
-            email, name, number, password
+            email, firstname: name, number, password
         });
 
         await newUser.save();
@@ -110,5 +128,62 @@ export const otpVerifier = asyncHandler(async (req, res) => {
 
     res.status(201).json({ msg: "New user has been created" });
 
-})
+});
 
+
+
+// @desc getting user profile
+// route get /api/
+// @access Protected
+export const getUserDetails = asyncHandler(async (req, res) => {
+    const useremail = req.useremail;
+
+    const user = await User.findOne({ email: useremail }).exec();
+
+    console.log(user);
+
+    return res.json({ userDetails: { ...user["_doc"], password: null } });
+
+});
+
+
+
+// @desc updating user profile
+// route PUT /api/user
+// @access Protected
+export const updateUserDetails = asyncHandler(async (req, res) => {
+
+    const {
+        firstname,
+        lastname,
+        age,
+        email,
+        phone_number,
+        specialty,
+        city,
+        institutionName,
+        gender,
+        countryCodeAndFlag,
+        country
+    } = req.body;
+
+    const useremail = req.useremail;
+    console.log(useremail);
+    await User.findOneAndUpdate({ email: useremail }, {
+        firstname,
+        lastname,
+        age,
+        email,
+        phone_number,
+        specialty,
+        city,
+        institutionName,
+        gender,
+        countryCodeAndFlag,
+        country
+    });
+
+
+    res.status(200).json("User profile has been updated");
+
+});

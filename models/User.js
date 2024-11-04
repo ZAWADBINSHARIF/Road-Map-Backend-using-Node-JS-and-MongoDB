@@ -3,15 +3,74 @@ import mongoose from "mongoose";
 import bcrypt from 'bcrypt';
 
 const userSchema = mongoose.Schema({
-    name: {
+    profile_image: {
+        type: String,
+    },
+    firstname: {
         type: String,
         required: true,
         trim: true,
+    },
+    lastname: {
+        type: String,
+        trim: true
+    },
+    age: {
+        type: String,
+        trim: true
     },
     email: {
         type: String,
         required: true,
         trim: true,
+    },
+    countryCodeAndFlag: {
+        code: {
+            type: String,
+            default: "+93"
+        },
+        flag: {
+            type: String,
+            default: "🇦🇫"
+        }
+    },
+    phone_number: {
+        type: String,
+        trim: true
+    },
+    gender: {
+        type: String,
+        enum: ["Male", "Female", "Other"]
+    },
+    education: {
+        type: String,
+        trim: true
+    },
+    specialty: {
+        type: String,
+        trim: true
+    },
+    country: {
+        name: {
+            type: String,
+            default: "Afghanistan"
+        },
+        flag: {
+            type: String,
+            default: "🇦🇫"
+        }
+    },
+    education: {
+        type: String,
+        trim: true
+    },
+    city: {
+        type: String,
+        trim: true
+    },
+    institutionName: {
+        type: String,
+        trim: true
     },
     password: String,
     rule: {
@@ -39,7 +98,7 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 };
 
-    
+
 const User = mongoose.model('user', userSchema);
 
 export default User;

@@ -4,6 +4,7 @@ import express from 'express';
 // internal import
 import caseFileUploader from '../middlewares/caseFileUploader.js';
 import { addCase, updateCase, removeCase } from '../controllers/caseController.js';
+import JWT_verifier from '../middlewares/JWT_verifier.js';
 
 
 
@@ -11,9 +12,9 @@ const router = express.Router();
 
 
 // ** For Admin
-router.post("/", caseFileUploader, addCase);
-router.post("/:caseId", caseFileUploader, updateCase);
-router.delete("/:caseId", removeCase);
+router.post("/", JWT_verifier("admin"), caseFileUploader, addCase);
+router.post("/:caseId", JWT_verifier("admin"), caseFileUploader, updateCase);
+router.delete("/:caseId", JWT_verifier("admin"), removeCase);
 
 
 
