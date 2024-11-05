@@ -1,6 +1,8 @@
 // external import
 import asyncHandler from 'express-async-handler';
 import otpGenerator from 'otp-generator';
+import path from 'path';
+import fs from 'fs';
 
 
 // internal import
@@ -19,13 +21,13 @@ export const authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
 
     const user = await User.findOne({ email }).exec();
-    console.log({ ...user });
+
     if (user && await user.matchPassword(password)) {
 
         const jwtToken = await createJWT({
             ...user["_doc"], profile_image: null, password: null, createdAt: null, updatedAt: null
         });
-        console.log("login");
+        console.log(jwtToken);
         return res.status(200)
             .json({
                 token: jwtToken,
@@ -33,11 +35,8 @@ export const authUser = asyncHandler(async (req, res) => {
                 {
                     ...user["_doc"],
                     password: null,
-                    profile_image: null,
-                    password: null,
                     createdAt: null,
                     updatedAt: null,
-                    countryCodeAndFlag: null
                 }
             });
 
@@ -136,11 +135,9 @@ export const otpVerifier = asyncHandler(async (req, res) => {
 // route get /api/
 // @access Protected
 export const getUserDetails = asyncHandler(async (req, res) => {
-    const useremail = req.useremail;
+    const _id = req._id;
 
-    const user = await User.findOne({ email: useremail }).exec();
-
-    console.log(user);
+    const user = await User.findById(_id).exec();
 
     return res.json({ userDetails: { ...user["_doc"], password: null } });
 
@@ -163,13 +160,21 @@ export const updateUserDetails = asyncHandler(async (req, res) => {
         city,
         institutionName,
         gender,
+        education,
         countryCodeAndFlag,
-        country
+        country,
+        profile_image
     } = req.body;
 
-    const useremail = req.useremail;
-    console.log(useremail);
-    await User.findOneAndUpdate({ email: useremail }, {
+    const _id = req._id;
+
+    const foundUser = await User.findById(_id).exec();
+
+    if (!foundUser) {
+        return res.status(404).json({ error: "User not found" });
+    }
+
+    const newProfileDetails = {
         firstname,
         lastname,
         age,
@@ -179,8 +184,34 @@ export const updateUserDetails = asyncHandler(async (req, res) => {
         city,
         institutionName,
         gender,
-        countryCodeAndFlag,
-        country
+        education
+    };
+
+    if (profile_image) {
+        newProfileDetails.profile_image = profile_image;
+
+        if (foundUser.profile_image) {
+
+            const __dirname = import.meta.dirname;
+            const currentImagePath = path.join(__dirname, "..", "public", "upload", foundUser.profile_image);
+
+            if (fs.existsSync(currentImagePath)) {
+                fs.unlinkSync(currentImagePath);
+            };
+
+        }
+    }
+
+    if (countryCodeAndFlag) {
+        newProfileDetails.countryCodeAndFlag = JSON.parse(countryCodeAndFlag);
+    }
+
+    if (country) {
+        newProfileDetails.country = JSON.parse(country);
+    }
+
+    await User.findOneAndUpdate({ _id }, {
+        ...newProfileDetails
     });
 
 

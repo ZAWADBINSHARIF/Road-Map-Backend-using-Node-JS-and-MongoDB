@@ -20,7 +20,7 @@ export default function singleFileUpload(
         },
         filename: function (req, file, cb) {
             const fileExt = path.extname(file.originalname);
-
+            console.log(file);
             const fileName = file.originalname
                 .replace(fileExt, "")
                 .toLowerCase()
@@ -34,11 +34,15 @@ export default function singleFileUpload(
                 name: fileName
             };
 
-            if (req.body.mediaFiles) {
-                req.body.mediaFiles.push(fileInfoObj);
-            } else {
-                req.body.mediaFiles = [];
-                req.body.mediaFiles.push(fileInfoObj);
+            if (uploadDestinationFolder === "cases") {
+                if (req.body.mediaFiles) {
+                    req.body.mediaFiles.push(fileInfoObj);
+                } else {
+                    req.body.mediaFiles = [];
+                    req.body.mediaFiles.push(fileInfoObj);
+                }
+            } else if (uploadDestinationFolder === "users" || uploadDestinationFolder === "clients") {
+                req.body.profile_image = fileInfoObj.uri;
             }
 
             cb(null, fullFileName);
