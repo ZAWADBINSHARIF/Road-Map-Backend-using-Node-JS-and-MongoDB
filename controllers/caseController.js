@@ -103,7 +103,6 @@ export const updateCase = expressAsyncHandler(async (req, res) => {
     //     mediaFiles,
     // });
 
-    console.log(res.body);
 
     try {
 
@@ -187,7 +186,7 @@ export async function addCase(req, res) {
                 }
             }
         );
-        console.log(req.body);
+
         res.status(201).json({ message: 'New case has been added' });
 
     } catch (error) {

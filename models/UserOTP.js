@@ -20,7 +20,6 @@ const userOTP_Schema = mongoose.Schema({
 userOTP_Schema.pre('findOneAndUpdate', async function (next) {
 
     if (this.createdAt) {
-        console.log("Updating expiration time");
         this.createdAt = new Date();
         this.expiresAt = new Date(Date.now() + OTP_EXPIRE_TIME * 60 * 1000);
     }

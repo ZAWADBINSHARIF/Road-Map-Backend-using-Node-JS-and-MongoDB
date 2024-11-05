@@ -96,7 +96,6 @@ export const getBranchForUser = expressAsyncHandler(async (req, res) => {
 
             }
         });
-        // console.log(branches);
         return res.status(200).json({ branches: branches[0], caseContainers: caseContainers[0] });
     }
 });

@@ -20,7 +20,7 @@ export default function singleFileUpload(
         },
         filename: function (req, file, cb) {
             const fileExt = path.extname(file.originalname);
-            console.log(file);
+
             const fileName = file.originalname
                 .replace(fileExt, "")
                 .toLowerCase()

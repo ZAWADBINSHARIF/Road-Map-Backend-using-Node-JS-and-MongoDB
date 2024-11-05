@@ -27,7 +27,7 @@ export const authUser = asyncHandler(async (req, res) => {
         const jwtToken = await createJWT({
             ...user["_doc"], profile_image: null, password: null, createdAt: null, updatedAt: null
         });
-        console.log(jwtToken);
+
         return res.status(200)
             .json({
                 token: jwtToken,

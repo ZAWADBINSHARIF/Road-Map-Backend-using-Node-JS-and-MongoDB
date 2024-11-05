@@ -17,7 +17,7 @@ export default function JWT_verifier(role = null) {
             cookie = cookie.split(" ")[1];
 
             const decode = await jwt.verify(cookie, JWT_SECURE_TOKEN);
-            console.log(cookie);
+
             if (role) {
 
                 if (decode.rule.toLowerCase() === role.toLowerCase()) {
