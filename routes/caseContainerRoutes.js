@@ -3,7 +3,7 @@ import express from 'express';
 
 
 // internal import
-import { createCaseContainer, getCaseContainer, publishOrUnpublishCaseContainer, removeCaseContainer, updateCaseContainer } from '../controllers/caseContainerController.js';
+import { createCaseContainer, getAllCaseContainers, getCaseContainer, publishOrUnpublishCaseContainer, removeCaseContainer, updateCaseContainer } from '../controllers/caseContainerController.js';
 import JWT_verifier from '../middlewares/JWT_verifier.js';
 
 
@@ -17,6 +17,7 @@ router.delete("/:caseContainerId", JWT_verifier("admin"), removeCaseContainer);
 
 // ** Both
 router.get("/:caseContainerId", getCaseContainer);
+router.get("/", JWT_verifier(), getAllCaseContainers);
 
 
 

@@ -35,6 +35,7 @@ const caseSchema = mongoose.Schema({
     dropdowns_users: [],
     caseLocation: {
         type: mongoose.Types.ObjectId,
+        ref: "case_container",
         required: true,
     },
     pageNo: {

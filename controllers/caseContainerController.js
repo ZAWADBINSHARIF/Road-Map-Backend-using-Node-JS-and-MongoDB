@@ -8,6 +8,25 @@ import Branch from "../models/branch.js";
 import CaseContainer from "../models/caseContainer.js";
 import Case from "../models/case.js";
 import path from "path";
+import User from "../models/User.js";
+
+
+
+
+// @desc For getting all published CaseContainers
+// route GET /api/caseContainer/
+// @access Protected
+export const getAllCaseContainers = expressAsyncHandler(async (req, res) => {
+
+    const foundUser = await User.findById(req._id).exec();
+
+    const allCasesContainer = await CaseContainer.find().exec();
+
+    const allPublishedCaseContainers = await CaseContainer.find({ publish: true }).exec();
+    console.log(allPublishedCaseContainers);
+
+    return res.status(200).json(foundUser.rule === "admin" ? allCasesContainer : allPublishedCaseContainers);
+});
 
 
 
