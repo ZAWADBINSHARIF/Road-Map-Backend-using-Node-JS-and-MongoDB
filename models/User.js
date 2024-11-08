@@ -72,6 +72,14 @@ const userSchema = mongoose.Schema({
         type: String,
         trim: true
     },
+    myCases: [{
+        type: mongoose.Types.ObjectId,
+        ref: "caseContainer"
+    }],
+    favoriteCases: [{
+        type: mongoose.Types.ObjectId,
+        ref: "caseContainer"
+    }],
     password: String,
     rule: {
         type: String,

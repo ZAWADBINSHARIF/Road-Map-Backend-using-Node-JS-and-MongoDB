@@ -12,6 +12,35 @@ import User from "../models/User.js";
 
 
 
+// @desc For adding or removing CaseContainers from user MyCases list
+// route POST /api/caseContainer/toggleMyCases
+// @access Protected
+export const toggleMyCases = expressAsyncHandler(async (req, res) => {
+
+    const { caseContainerId } = req.body;
+    const userId = req._id;
+
+    const user = await User.findOneAndUpdate(
+        { _id: userId, myCases: { $in: [caseContainerId] } },
+        { $pull: { myCases: caseContainerId } },
+        { new: true }
+    );
+
+    if (!user) {
+
+        await User.findOneAndUpdate(
+            { _id: userId },
+            { $addToSet: { myCases: caseContainerId } },
+            { new: true }
+        );
+    }
+
+    return res.status(200).json({ "msg": "My Cases list has been updated" });
+
+});
+
+
+
 
 // @desc For getting all published CaseContainers
 // route GET /api/caseContainer/

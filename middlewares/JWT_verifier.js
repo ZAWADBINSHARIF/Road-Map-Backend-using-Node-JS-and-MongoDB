@@ -17,6 +17,7 @@ export default function JWT_verifier(role = null) {
             cookie = cookie.split(" ")[1];
 
             const decode = await jwt.verify(cookie, JWT_SECURE_TOKEN);
+            req._id = decode._id;
 
             if (role) {
 
@@ -27,7 +28,6 @@ export default function JWT_verifier(role = null) {
                 }
 
             } else {
-                req._id = decode._id;
                 next();
             }
 
