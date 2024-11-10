@@ -56,7 +56,7 @@ export default function singleFileUpload(
             if (acceptType.includes(file.mimetype)) {
                 cb(null, true);
             } else {
-                cb(createError(errorMessage));
+                cb(errorMessage);
             }
         }
     });

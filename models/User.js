@@ -74,11 +74,11 @@ const userSchema = mongoose.Schema({
     },
     myCases: [{
         type: mongoose.Types.ObjectId,
-        ref: "caseContainer"
+        ref: "case_container"
     }],
     favoriteCases: [{
         type: mongoose.Types.ObjectId,
-        ref: "caseContainer"
+        ref: "case_container"
     }],
     password: String,
     rule: {
