@@ -30,11 +30,17 @@ const clientSchema = mongoose.Schema({
         trim: true,
     },
     countryCodeAndFlag: {
-        code: String,
-        flag: String
+        code: {
+            type: String,
+            default: "+93"
+        },
+        flag: {
+            type: String,
+            default: "🇦🇫"
+        }
     },
     phone_number: {
-        type: Number,
+        type: String,
         trim: true
     },
     gender: {
@@ -50,8 +56,14 @@ const clientSchema = mongoose.Schema({
         trim: true
     },
     country: {
-        type: String,
-        trim: true
+        name: {
+            type: String,
+            default: "Afghanistan"
+        },
+        flag: {
+            type: String,
+            default: "🇦🇫"
+        }
     },
     education: {
         type: String,

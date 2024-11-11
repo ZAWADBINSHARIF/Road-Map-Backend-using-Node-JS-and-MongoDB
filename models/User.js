@@ -76,6 +76,10 @@ const userSchema = mongoose.Schema({
         type: mongoose.Types.ObjectId,
         ref: "case_container"
     }],
+    myList: [{
+        type: mongoose.Types.ObjectId,
+        ref: "answare_case"
+    }],
     favoriteCases: [{
         type: mongoose.Types.ObjectId,
         ref: "case_container"
