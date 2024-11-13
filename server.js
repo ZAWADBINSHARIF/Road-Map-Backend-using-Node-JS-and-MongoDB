@@ -14,7 +14,7 @@ import branchRoutes from './routes/branchRoutes.js';
 import caseRouters from './routes/caseRoutes.js';
 import caseContainerRoutes from './routes/caseContainerRoutes.js';
 import userRouters from './routes/userRoutes.js';
-import answareCaseRouters from "./routes/answareCaseRoutes.js";
+import answerCaseRouters from "./routes/answerCaseRoutes.js";
 
 
 // for getting the values of .env file
@@ -50,7 +50,7 @@ app.use("/api/user", userRouters);
 app.use("/api/branch", branchRoutes);
 app.use("/api/case", caseRouters);
 app.use("/api/caseContainer", caseContainerRoutes);
-app.use("/api/answareCase", answareCaseRouters);
+app.use("/api/answerCase", answerCaseRouters);
 
 mongoose.connection.once('open', () => {
     console.log("Database is connected");

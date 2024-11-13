@@ -4,41 +4,46 @@ import expressAsyncHandler from "express-async-handler";
 
 // internal import
 import User from "../models/User.js";
-import AnswareCase from "../models/answareCase.js";
+import AnswerCase from "../models/answerCase.js";
 import Client from "../models/client.js";
 
 
 
 
-// @decs For getting all answare cases for My list
-// route GET /api/answareCase
+// @desc For getting all answer cases for My list
+// @route GET /api/answerCase
 // @access protected
-export const getAllAnswareCases = expressAsyncHandler(async (req, res) => {
-
+export const getAllAnswerCases = expressAsyncHandler(async (req, res) => {
     const _id = req._id;
 
-    const foundUser = await User.find({ _id, role: "user" }).populate("myList").exec();
+    try {
+        const foundUsers = await User.find({ _id, rule: "user" }).populate("myList").exec();
 
-    if (foundUser) {
-        console.log(foundUser);
-        return res.status(200).json(foundUser.myList);
+        if (foundUsers && foundUsers.length > 0) {
+            return res.status(200).json(foundUsers[0].myList);
+        }
+
+        const allAnswerCases = await AnswerCase.find().populate("userId clientDetails");
+
+        console.log(allAnswerCases);
+
+        return res.status(200).json(allAnswerCases);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ message: "Something went wrong" });
     }
-
-    const allAnswareCases = await AnswareCase.find();
-
-    return res.status(200).json(allAnswareCases);
-
 });
+
 
 
 
 // @decs For posting answare case
 // route POST /api/answareCase
 // @access protected
-export const addNewAnswareCase = expressAsyncHandler(async (req, res) => {
+export const addNewAnswerCase = expressAsyncHandler(async (req, res) => {
 
     const _id = req._id;
-    const { answareCase, clientProfileDetails } = req.body;
+    const { answareCase, clientProfileDetails, caseContainerName } = req.body;
     const answareCaseObj = JSON.parse(answareCase);
     const clientProfileDetailsObj = clientProfileDetails ? JSON.parse(clientProfileDetails) : null;
 
@@ -65,10 +70,11 @@ export const addNewAnswareCase = expressAsyncHandler(async (req, res) => {
 
 
 
-        const newAnswareCase = await new AnswareCase({
+        const newAnswareCase = await new AnswerCase({
             ...answareCaseObj,
             userId: foundUser._id,
-            clientDetails: newClient ? newClient._id : null
+            clientDetails: newClient ? newClient._id : null,
+            caseContainerName
         });
 
         await newAnswareCase.save();

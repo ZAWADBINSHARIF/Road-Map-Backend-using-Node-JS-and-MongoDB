@@ -1,10 +1,11 @@
 import mongoose, { Types } from "mongoose";
 
-const answareCaseSchema = mongoose.Schema({
+const answerCaseSchema = mongoose.Schema({
     cases: [],
     total_marks: Number,
     percentage: Number,
     impressionResultPercentage: {},
+    caseContainerName: String,
     clientDetails: {
         type: mongoose.Types.ObjectId,
         ref: "client"
@@ -20,5 +21,5 @@ const answareCaseSchema = mongoose.Schema({
 );
 
 
-const AnswareCase = mongoose.model("answare_case", answareCaseSchema);
-export default AnswareCase;
+const AnswerCase = mongoose.model("answer_case", answerCaseSchema);
+export default AnswerCase;

@@ -78,7 +78,7 @@ const userSchema = mongoose.Schema({
     }],
     myList: [{
         type: mongoose.Types.ObjectId,
-        ref: "answare_case"
+        ref: "answer_case"
     }],
     favoriteCases: [{
         type: mongoose.Types.ObjectId,
