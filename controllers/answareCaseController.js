@@ -5,6 +5,7 @@ import expressAsyncHandler from "express-async-handler";
 // internal import
 import User from "../models/User.js";
 import AnswareCase from "../models/answareCase.js";
+import Client from "../models/client.js";
 
 
 
@@ -37,27 +38,51 @@ export const getAllAnswareCases = expressAsyncHandler(async (req, res) => {
 export const addNewAnswareCase = expressAsyncHandler(async (req, res) => {
 
     const _id = req._id;
-    const { answareCase } = req.body;
+    const { answareCase, clientProfileDetails } = req.body;
+    const answareCaseObj = JSON.parse(answareCase);
+    const clientProfileDetailsObj = clientProfileDetails ? JSON.parse(clientProfileDetails) : null;
 
-    const foundUser = await User.findById(_id).exec();
+    console.log(answareCaseObj);
+    console.log(clientProfileDetailsObj);
 
-    if (!foundUser) {
-        return res.status(404).json({ error: "User nat found" });
-    }
+    try {
 
-    const newAnswareCase = await new AnswareCase({
-        ...answareCase,
-        userId: foundUser._id
-    });
+        const foundUser = await User.findById(_id).exec();
 
-    await newAnswareCase.save();
+        if (!foundUser) {
+            return res.status(404).json({ error: "User nat found" });
+        }
 
-    await User.findOneAndUpdate({ _id },
-        {
-            $addToSet: { myList: newAnswareCase._id }
+        let newClient;
+        if (clientProfileDetails) {
+            newClient = await new Client({
+                ...clientProfileDetailsObj,
+                profile_image: req.body.profile_image
+            });
+
+            await newClient.save();
+        }
+
+
+
+        const newAnswareCase = await new AnswareCase({
+            ...answareCaseObj,
+            userId: foundUser._id,
+            clientDetails: newClient ? newClient._id : null
         });
 
+        await newAnswareCase.save();
 
-    return res.status(200).json("Answare case has been uploaded");
+        await User.findOneAndUpdate({ _id },
+            {
+                $addToSet: { myList: newAnswareCase._id }
+            });
+
+        return res.status(200).json("Answare case has been uploaded");
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ error: "Something went wrong" });
+    }
 
 });
