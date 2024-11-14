@@ -9,6 +9,56 @@ import User from "../models/User.js";
 
 
 
+// @desc For changing all User's role
+// route put /api/user/changeRole/:userId
+// @access Protected
+export const changeUserRole = asyncHandler(async (req, res) => {
+
+    const ownId = req._id;
+    const { userId } = req.params;
+    const { newRole } = req.body;
+    console.log(ownId, userId, newRole);
+    if (ownId == userId) {
+        return res.status(401).json({ error: "You can't do this" });
+    }
+
+    try {
+
+        await User.findOneAndUpdate({ _id: userId }, {
+            rule: newRole
+        });
+
+        return res.status(200).json("User role has been updated");
+
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({ error: "Somthing went wrong" });
+    }
+});
+
+
+
+// @desc For getting all User info
+// route get /api/user/all_user
+// @access Protected
+export const getAllUser = asyncHandler(async (req, res) => {
+
+    try {
+        const user = await User.find().select('-password').exec();
+        console.log(user);
+        return res.status(200).json(user);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ "error": error });
+    }
+
+
+});
+
+
+
 
 // @desc getting user's MyCases
 // route get /api/user/myCases
