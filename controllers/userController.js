@@ -9,8 +9,48 @@ import User from "../models/User.js";
 
 
 
+// @desc For removing User
+// route DELETE /api/user/removeUser/:userId
+// @access Protected
+export const removingUser = asyncHandler(async (req, res) => {
+
+    const ownId = req._id;
+    const { userId } = req.params;
+
+    console.log(ownId, userId);
+    if (ownId == userId) {
+        return res.status(401).json({ error: "You can't do this" });
+    }
+
+    try {
+
+        const removedUser = await User.findOneAndDelete({ _id: userId });
+
+        if (removedUser.profile_image) {
+
+            const __dirname = import.meta.dirname;
+            const currentImagePath = path.join(__dirname, "..", "public", "upload", removedUser.profile_image);
+
+            if (fs.existsSync(currentImagePath)) {
+                fs.unlinkSync(currentImagePath);
+            };
+
+        }
+
+        return res.status(200).json("User role has been updated");
+
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({ error: "Somthing went wrong" });
+    }
+});
+
+
+
+
 // @desc For changing all User's role
-// route put /api/user/changeRole/:userId
+// route PUT /api/user/changeRole/:userId
 // @access Protected
 export const changeUserRole = asyncHandler(async (req, res) => {
 
@@ -40,7 +80,7 @@ export const changeUserRole = asyncHandler(async (req, res) => {
 
 
 // @desc For getting all User info
-// route get /api/user/all_user
+// route GET /api/user/all_user
 // @access Protected
 export const getAllUser = asyncHandler(async (req, res) => {
 
