@@ -16,9 +16,17 @@ import User from "../models/User.js";
 export const getMyCases = asyncHandler(async (req, res) => {
     const _id = req._id;
 
-    const user = await User.findById(_id).populate("myCases").exec();
-    console.log(user.myCases);
-    return res.json(user.myCases);
+    try {
+        const user = await User.findById(_id).populate("myCases").exec();
+        const filterThePublishedCases = user?.myCases?.filter(item => item.publish === true);
+
+        return res.json(filterThePublishedCases);
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ "error": error });
+    }
+
 
 });
 

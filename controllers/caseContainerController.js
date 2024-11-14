@@ -47,14 +47,20 @@ export const toggleMyCases = expressAsyncHandler(async (req, res) => {
 // @access Protected
 export const getAllCaseContainers = expressAsyncHandler(async (req, res) => {
 
-    const foundUser = await User.findById(req._id).exec();
+    try {
+        const foundUser = await User.findById(req._id).exec();
 
-    const allCasesContainer = await CaseContainer.find().exec();
+        const allCasesContainer = await CaseContainer.find().exec();
 
-    const allPublishedCaseContainers = await CaseContainer.find({ publish: true }).exec();
-    console.log(allPublishedCaseContainers);
+        const allPublishedCaseContainers = await CaseContainer.find({ publish: true }).exec();
+        console.log(allPublishedCaseContainers);
 
-    return res.status(200).json(foundUser.rule === "admin" ? allCasesContainer : allPublishedCaseContainers);
+        return res.status(200).json(foundUser.rule === "admin" ? allCasesContainer : allPublishedCaseContainers);
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ "error": error.message });
+    }
+
 });
 
 
