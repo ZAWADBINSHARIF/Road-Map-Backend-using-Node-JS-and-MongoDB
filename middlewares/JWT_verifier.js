@@ -12,9 +12,12 @@ export default function JWT_verifier(role = null) {
     return async (req, res, next) => {
         let cookie = req.headers.authorization;
 
+        if (!cookie) {
+            return res.status(400).json({ error: "User is not valid" });
+        }
 
         try {
-            cookie = cookie.split(" ")[1];
+            cookie = cookie?.split(" ")[1];
 
             const decode = await jwt.verify(cookie, JWT_SECURE_TOKEN);
             req._id = decode._id;
