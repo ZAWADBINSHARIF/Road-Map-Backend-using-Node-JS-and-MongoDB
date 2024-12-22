@@ -22,11 +22,11 @@ const clientSchema = mongoose.Schema({
     },
     age: {
         type: String,
+        required: true,
         trim: true
     },
     email: {
         type: String,
-        required: true,
         trim: true,
     },
     countryCodeAndFlag: {

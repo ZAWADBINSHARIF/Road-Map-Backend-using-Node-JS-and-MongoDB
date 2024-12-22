@@ -19,7 +19,7 @@ import axios from 'axios';
 // @access Public
 export const authUser = asyncHandler(async (req, res) => {
     const { email, password } = req.body;
-
+    console.log({ email, password });
     const user = await User.findOne({ email }).exec();
 
     if (user && await user.matchPassword(password)) {
