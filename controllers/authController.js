@@ -1,8 +1,7 @@
 // external import
 import asyncHandler from 'express-async-handler';
 import otpGenerator from 'otp-generator';
-import path from 'path';
-import fs from 'fs';
+
 
 
 // internal import
@@ -23,6 +22,10 @@ export const authUser = asyncHandler(async (req, res) => {
     const user = await User.findOne({ email }).exec();
 
     if (user && await user.matchPassword(password)) {
+
+        if (user.accountStatus === "deactive") {
+            return res.status(403).json({ error: "Your account is deactive" });
+        }
 
         const jwtToken = await createJWT({
             ...user["_doc"], profile_image: null, password: null, createdAt: null, updatedAt: null

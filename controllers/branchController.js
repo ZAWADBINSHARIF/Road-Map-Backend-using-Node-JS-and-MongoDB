@@ -139,7 +139,6 @@ export const createNewBranch = expressAsyncHandler(async (req, res) => {
 
             newRootBranch.save();
 
-            console.log(newRootBranch);
         } else {
 
             newBranch.branchLocation = location_id;

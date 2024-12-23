@@ -16,6 +16,7 @@ import caseContainerRoutes from './routes/caseContainerRoutes.js';
 import userRouters from './routes/userRoutes.js';
 import answerCaseRouters from "./routes/answerCaseRoutes.js";
 import dashboardRouters from './routes/dashboardRoutes.js';
+import checkingUserCredential from './middlewares/checkingUserCredential.js';
 
 
 // for getting the values of .env file
@@ -47,10 +48,7 @@ app.use('/api', express.static(path.join(__dirname, 'public', 'upload')));
 
 
 // checking user credentials
-app.use((req, res, next) => {
-    console.log(req.originalUrl);
-    next();
-});
+app.use(checkingUserCredential);
 
 
 // all routers path

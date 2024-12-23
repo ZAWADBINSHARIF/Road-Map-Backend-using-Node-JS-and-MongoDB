@@ -48,7 +48,37 @@ export const removingUser = asyncHandler(async (req, res) => {
 
 
 
-// @desc For changing all User's role
+// @desc For changing User's account status
+// route PUT /api/user/changeUserAccoutStatus/:userId
+// @access Protected
+export const changeUserAccoutStatus = asyncHandler(async (req, res) => {
+
+    const ownId = req._id;
+    const { userId } = req.params;
+    const { accountStatus } = req.body;
+
+    if (ownId == userId) {
+        return res.status(401).json({ error: "You can't do this" });
+    }
+
+    try {
+
+        await User.findOneAndUpdate({ _id: userId }, {
+            accountStatus
+        });
+        console.log(accountStatus);
+        return res.status(200).json("User's account status has been updated");
+
+    } catch (error) {
+        console.log(error);
+
+        return res.status(500).json({ error: "Somthing went wrong" });
+    }
+});
+
+
+
+// @desc For changing User's role
 // route PUT /api/user/changeRole/:userId
 // @access Protected
 export const changeUserRole = asyncHandler(async (req, res) => {
@@ -85,7 +115,7 @@ export const getAllUser = asyncHandler(async (req, res) => {
 
     try {
         const user = await User.find().select('-password').exec();
-        console.log(user);
+
         return res.status(200).json(user);
 
     } catch (error) {
