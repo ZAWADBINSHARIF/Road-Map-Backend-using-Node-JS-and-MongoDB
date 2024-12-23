@@ -7,6 +7,10 @@ const branchSchema = mongoose.Schema({
         required: true,
         trim: true
     },
+    branchLocation: {
+        type: mongoose.Types.ObjectId,
+        ref: 'branch'
+    },
     branches: [{
         type: mongoose.Types.ObjectId,
         ref: 'branch'

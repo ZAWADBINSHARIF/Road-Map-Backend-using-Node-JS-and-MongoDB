@@ -9,7 +9,7 @@ import RootBranch from "../models/rootBranch.js";
 
 
 // @desc rename branche
-// route POST /api/branch/remove?branch_id
+// route DELTE /api/branch/remove?branch_id
 // @access Private
 export const removeBranch = expressAsyncHandler(async (req, res) => {
     const { branch_id } = req.query;
@@ -29,7 +29,19 @@ export const removeBranch = expressAsyncHandler(async (req, res) => {
             const removingID = branchFounded[0]._id;
 
             await Branch.findOneAndDelete({ _id: removingID });
-            await RootBranch.findOneAndDelete({ branch_ref: removingID });
+
+            if (branchFounded[0].branchLocation !== null) {
+                await Branch.findOneAndUpdate(
+                    { branches: { $in: [removingID] } },
+                    {
+                        $pull: {
+                            branches: removingID
+                        }
+                    }
+                );
+            } else {
+                await RootBranch.findOneAndDelete({ branch_ref: removingID });
+            }
 
         } else {
             return res.status(406).json({ error: "The Section is not allowed to remove" });
@@ -116,10 +128,13 @@ export const createNewBranch = expressAsyncHandler(async (req, res) => {
 
     try {
 
+        // ** if this branch location is root then don't need to set branchLocation field
+        // ** otherwise set branchLocation field
+
         if (location_id === '/') {
 
             const newRootBranch = await new RootBranch({
-                branch_ref: newBranch._id
+                branch_ref: newBranch._id,
             });
 
             newRootBranch.save();
@@ -127,6 +142,7 @@ export const createNewBranch = expressAsyncHandler(async (req, res) => {
             console.log(newRootBranch);
         } else {
 
+            newBranch.branchLocation = location_id;
 
             await Branch.findOneAndUpdate(
                 { _id: location_id },
