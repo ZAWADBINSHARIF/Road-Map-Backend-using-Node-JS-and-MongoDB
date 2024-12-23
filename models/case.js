@@ -47,14 +47,6 @@ const caseSchema = mongoose.Schema({
 });
 
 
-caseSchema.pre('deleteMany', async function (next) {
-    console.log("remove");
-
-    console.log(this);
-
-});
-
-
 const Case = mongoose.model('case', caseSchema);
 
 export default Case;

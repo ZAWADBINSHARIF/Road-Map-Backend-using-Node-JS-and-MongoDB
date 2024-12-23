@@ -45,6 +45,14 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use('/api', express.static(path.join(__dirname, 'public', 'upload')));
 
+
+// checking user credentials
+app.use((req, res, next) => {
+    console.log(req.originalUrl);
+    next();
+});
+
+
 // all routers path
 app.use("/api", authRoutes);
 app.use("/api/user", userRouters);

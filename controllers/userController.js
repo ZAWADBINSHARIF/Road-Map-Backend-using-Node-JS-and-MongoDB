@@ -17,7 +17,6 @@ export const removingUser = asyncHandler(async (req, res) => {
     const ownId = req._id;
     const { userId } = req.params;
 
-    console.log(ownId, userId);
     if (ownId == userId) {
         return res.status(401).json({ error: "You can't do this" });
     }
@@ -57,7 +56,7 @@ export const changeUserRole = asyncHandler(async (req, res) => {
     const ownId = req._id;
     const { userId } = req.params;
     const { newRole } = req.body;
-    console.log(ownId, userId, newRole);
+
     if (ownId == userId) {
         return res.status(401).json({ error: "You can't do this" });
     }

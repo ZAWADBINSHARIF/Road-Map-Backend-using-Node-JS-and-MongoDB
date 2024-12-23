@@ -64,8 +64,6 @@ export const removeCase = expressAsyncHandler(async (req, res) => {
 // @access private
 export const updateCase = expressAsyncHandler(async (req, res) => {
 
-    console.log(req.body);
-
     const caseId = req.params?.caseId;
     let {
         id,
@@ -86,22 +84,6 @@ export const updateCase = expressAsyncHandler(async (req, res) => {
     if (frequency) frequency = JSON.parse(frequency);
     if (!dropdowns_users) dropdowns_users = [];
     if (!mediaFiles) mediaFiles = [];
-
-    // console.log({
-    //     id,
-    //     information,
-    //     question,
-    //     date,
-    //     note,
-    //     frequency,
-    //     severity,
-    //     startTime,
-    //     finishTime,
-    //     dropdowns_users,
-    //     pageNo,
-    //     caseContainerId,
-    //     mediaFiles,
-    // });
 
 
     try {

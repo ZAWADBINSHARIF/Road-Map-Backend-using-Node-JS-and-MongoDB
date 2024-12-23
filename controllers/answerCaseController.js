@@ -102,9 +102,6 @@ export const addNewAnswerCase = expressAsyncHandler(async (req, res) => {
     const answareCaseObj = JSON.parse(answareCase);
     const clientProfileDetailsObj = clientProfileDetails ? JSON.parse(clientProfileDetails) : null;
 
-    console.log(answareCaseObj);
-    console.log(clientProfileDetailsObj);
-
     try {
 
         const foundUser = await User.findById(_id).exec();

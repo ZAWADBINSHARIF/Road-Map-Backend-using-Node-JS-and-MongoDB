@@ -53,7 +53,6 @@ export const getAllCaseContainers = expressAsyncHandler(async (req, res) => {
         const allCasesContainer = await CaseContainer.find().exec();
 
         const allPublishedCaseContainers = await CaseContainer.find({ publish: true }).exec();
-        console.log(allPublishedCaseContainers);
 
         return res.status(200).json(foundUser.rule === "admin" ? allCasesContainer : allPublishedCaseContainers);
     } catch (error) {
@@ -195,7 +194,6 @@ export const removeCaseContainer = expressAsyncHandler(async (req, res) => {
             res.status(404).json({ 'error': "Case Container not found" });
             return;
         }
-        console.log(removedCaseContainer.caseContainerLocation);
 
         // Now delete all cases associated with the removed caseContainer
 

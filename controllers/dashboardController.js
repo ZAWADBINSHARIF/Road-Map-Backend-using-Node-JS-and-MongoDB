@@ -27,7 +27,7 @@ export const getDashboardInfo = asyncHandler(async (req, res) => {
             const list = await AnswerCase.countDocuments({});
             const totalCaseContainer = await CaseContainer.countDocuments({});
             const totalSection = await Branch.countDocuments({});
-            console.log({ totalUser, list, totalCaseContainer, totalSection });
+
             return res.status(200).json({ totalUser, list, totalCaseContainer, totalSection });
 
         } else {
@@ -35,7 +35,7 @@ export const getDashboardInfo = asyncHandler(async (req, res) => {
             const myList = foundUser?.myList.length;
             const totalCaseContainer = await CaseContainer.countDocuments({ publish: true });
             const totalSection = await Branch.countDocuments({ publish: true });
-            console.log({ myCases, myList, totalCaseContainer, totalSection });
+
             return res.status(200).json({ myCases, myList, totalCaseContainer, totalSection });
 
         }
