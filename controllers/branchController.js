@@ -8,7 +8,7 @@ import RootBranch from "../models/rootBranch.js";
 
 
 
-// @desc rename branche
+// @desc revmove branche
 // route DELTE /api/branch/remove?branch_id
 // @access Private
 export const removeBranch = expressAsyncHandler(async (req, res) => {
@@ -30,7 +30,8 @@ export const removeBranch = expressAsyncHandler(async (req, res) => {
 
             await Branch.findOneAndDelete({ _id: removingID });
 
-            if (branchFounded[0].branchLocation !== null) {
+            if (branchFounded[0].branchLocation) {
+
                 await Branch.findOneAndUpdate(
                     { branches: { $in: [removingID] } },
                     {
@@ -58,8 +59,8 @@ export const removeBranch = expressAsyncHandler(async (req, res) => {
 });
 
 
-// @desc rename branche
-// route POST /api/branch/update_branch?branch_id
+// @desc update branche
+// route PUT /api/branch/update_branch?branch_id
 // @access Private
 export const updateBranch = expressAsyncHandler(async (req, res) => {
     const { branch_id } = req.query;

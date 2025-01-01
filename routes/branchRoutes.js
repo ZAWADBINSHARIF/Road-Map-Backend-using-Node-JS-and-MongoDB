@@ -12,7 +12,7 @@ const router = express.Router();
 // ** For Admin
 router.post('/create_new_branch', JWT_verifier("admin"), createNewBranch);
 router.get("/get_branch", getBranch);
-router.post("/update_branch", JWT_verifier("admin"), updateBranch);
+router.put("/update_branch", JWT_verifier("admin"), updateBranch);
 router.delete("/remove", JWT_verifier("admin"), removeBranch);
 
 

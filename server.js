@@ -44,11 +44,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 
-app.use('/api', express.static(path.join(__dirname, 'public', 'upload')));
-
-
 // checking user credentials
 app.use(checkingUserCredential);
+
+// for static files like images, videos, etc
+app.use('/api', express.static(path.join(__dirname, 'public', 'upload')));
 
 
 // all routers path
